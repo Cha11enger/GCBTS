@@ -7,12 +7,6 @@ import { AccessTokenData, GitHubUserData } from '../types/github';
 
 dotenv.config();
 
-// Perform critical environment variable checks at application start
-if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET || !process.env.JWT_SECRET) {
-    console.error('Critical environment variables are missing.');
-    process.exit(1); // Terminate the application
-}
-
 const router = express.Router();
 
 router.get('/github', (req: Request, res: Response) => {

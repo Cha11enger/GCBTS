@@ -7,16 +7,10 @@ import { AccessTokenData, GitHubUserData } from '../types/github';
 
 dotenv.config();
 
-// Perform critical environment variable checks at application start
-if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET || !process.env.JWT_SECRET) {
-    console.error('Critical environment variables are missing.');
-    process.exit(1); // Terminate the application
-}
-
 const router = express.Router();
 
 router.get('/github', (req: Request, res: Response) => {
-    const state = req.query.state?.toString() || 'no_state_provided';
+    const state = req.query.state || 'no_state_provided';
     console.log('Initiating OAuth with state:', state);
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     res.redirect(url);
@@ -31,14 +25,10 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
     try {
         const params = new URLSearchParams();
-        if (process.env.GITHUB_CLIENT_ID) {
-            params.append('client_id', process.env.GITHUB_CLIENT_ID);
-        }
-        if (process.env.GITHUB_CLIENT_SECRET) {
-            params.append('client_secret', process.env.GITHUB_CLIENT_SECRET);
-        }
+        params.append('client_id', process.env.GITHUB_CLIENT_ID);
+        params.append('client_secret', process.env.GITHUB_CLIENT_SECRET);
         params.append('code', code.toString());
-        params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL || '');
+        params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL);
         params.append('state', state.toString());
 
         const accessTokenResponse: AxiosResponse<AccessTokenData> = await axios.post('https://github.com/login/oauth/access_token', params.toString(), { headers: { Accept: 'application/json' } });
@@ -65,9 +55,8 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         } else {
             user.accessToken = accessTokenData.access_token;
         }
-        if (!process.env.JWT_SECRET) {
-            throw new Error('JWT secret is not defined.');
-        }
+        await user.save();
+        console.log('User saved:', user);
 
         const jwtToken = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
 

@@ -7,16 +7,10 @@ import { AccessTokenData, GitHubUserData } from '../types/github';
 
 dotenv.config();
 
-// Perform critical environment variable checks at application start
-if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET || !process.env.JWT_SECRET) {
-    console.error('Critical environment variables are missing.');
-    process.exit(1); // Terminate the application
-}
-
 const router = express.Router();
 
 router.get('/github', (req: Request, res: Response) => {
-    const state = req.query.state?.toString() || 'no_state_provided';
+    const state = req.query.state || 'no_state_provided';
     console.log('Initiating OAuth with state:', state);
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     res.redirect(url);
