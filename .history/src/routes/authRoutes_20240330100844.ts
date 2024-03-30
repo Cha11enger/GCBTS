@@ -20,7 +20,7 @@ router.get('/github', (req, res) => {
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     
     // res.redirect(url);
-    return res.status(200).send({ url });
+    return
 });
 
 // Handle GitHub OAuth callback
