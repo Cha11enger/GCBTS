@@ -21,7 +21,7 @@ router.get('/github', (req, res) => {
 // Handle GitHub OAuth callback
 router.get('/github/callback', async (req: Request, res: Response) => {
     const { code, state } = req.query;
-    console.log('GitHub OAuth callback:', code, state);
+    
     if (!code || !state) {
         return res.status(400).send("Error: Code and state are required.");
     }
@@ -79,7 +79,6 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
         // Redirect to GPT_CALLBACK_URL with success message, code, and state
         console.log('Redirecting to GPT_CALLBACK_URL:', process.env.GPT_CALLBACK_URL);
-        console.log('GitHub OAuth callback success:', code, state);
         res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&code=${code}&state=${state}`);
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);
