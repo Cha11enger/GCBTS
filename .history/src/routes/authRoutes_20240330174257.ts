@@ -58,21 +58,22 @@ router.get('/github/callback', async (req: Request, res: Response) => {
           const jwtToken = jwt.sign({ userId: user._id.toString() }, jwtSecret, { expiresIn: '1h' });
           // Use jwtToken as needed
           console.log('JWT Token:', jwtToken);
-          res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&state=${state}&code=${code}`);
-        }
-        catch (error) {
-          console.error('Error signing JWT:', error);
-          res.status(500).send("Internal Server Error");
-        }
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error('GitHub OAuth callback error:', error.response?.data || error.message);
-        } else {
-            console.error('Unexpected error:', error);
-        }
-        res.status(500).send("Internal Server Error");
-    }
-} );
+          res.json({ jwt: jwtToken });
+          
+        // const openaiCallbackUrl = process.env.GPT_CALLBACK_URL || '';
+        // console.log('Redirecting to OpenAI Callback URL with token:', openaiCallbackUrl);
+        // res.redirect(`${openaiCallbackUrl}?auth_success=true&state=${state}&code=${code}&jwt=${jwtToken}`);
+        // } catch (error) {
+        //   // Improved error handling
+        //   if (axios.isAxiosError(error)) {
+        //     // Now we know `error` is an AxiosError, so we can safely access `error.response`
+        //     console.error('GitHub OAuth callback error:', error.response?.data || error.message);
+        //   } else {
+        //     console.error('Unexpected error:', error);
+        //   }
+        //   res.status(500).send("Internal Server Error");
+        
+  
 
 router.post('/token', async (req: Request, res: Response) => {
   const { code, state } = req.body;
