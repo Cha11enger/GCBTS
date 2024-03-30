@@ -10,7 +10,7 @@ dotenv.config();
 const router = express.Router();
 
 router.get('/github', (req, res) => {
-    const state =  req.query.state || 'no_state_provided';
+    const state =  req.query.state || 'no_state_provided' }));
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${state}&scope=user:email,repo`;
     
     console.log('Initiating OAuth with state:', state);
