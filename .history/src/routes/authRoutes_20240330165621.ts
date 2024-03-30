@@ -121,12 +121,13 @@ router.post('/token', async (req: Request, res: Response) => {
   console.log('Exchanging code for token:', code, 'with state:', state);
 
   try {
-    const params = new URLSearchParams();
-    params.append('client_id', process.env.GITHUB_CLIENT_ID || '');
-    params.append('client_secret', process.env.GITHUB_CLIENT_SECRET || '');
-    params.append('code', code);
-    params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL || '');
-    params.append('state', state);
+    const params = new URLSearchParams({
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code: code,
+      redirect_uri: process.env.GITHUB_CALLBACK_URL,
+      state: state
+    });
 
     const response = await axios.post('https://github.com/login/oauth/access_token', params.toString(), {
       headers: {
@@ -144,7 +145,7 @@ router.post('/token', async (req: Request, res: Response) => {
 
     // Here, instead of directly using the GitHub access token, generate and return a JWT or other suitable token for your application.
     // The following is just an example of how you might generate a JWT.
-    const jwtToken = jwt.sign({ githubAccessToken: accessTokenData.access_token }, process.env.JWT_SECRET || '', { expiresIn: '1h' });
+    const jwtToken = jwt.sign({ githubAccessToken: accessTokenData.access_token }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     return res.json({
       access_token: jwtToken,
