@@ -34,11 +34,24 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL!);
         params.append('state', state as string);
 
-        const accessTokenResponse = await axios.post(
-            'https://github.com/login/oauth/access_token', 
-            params, 
-            { headers: { Accept: 'application/json' } }
-        );
+        // const accessTokenResponse = await axios.post(
+        //     'https://github.com/login/oauth/access_token', 
+        //     params, 
+        //     { headers: { Accept: 'application/json' } }
+        // );
+
+        axios.post('https://github.com/login/oauth/access_token', params, {
+  headers: { Accept: 'application/json' }
+}).then(response => {
+  if (response.headers['content-type'].includes('application/json')) {
+    // Process JSON response
+  } else {
+    console.error('Unexpected response type:', response.headers['content-type']);
+    // Handle non-JSON response
+  }
+}).catch(error => {
+  console.error('Error during token exchange:', error);
+});
 
         const accessTokenData: AccessTokenData = accessTokenResponse.data;
 
@@ -78,10 +91,9 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         // res.redirect(`${redirectUri}?auth_success=true&message=Authentication successful`);
         // res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful`);
         // res.redirect to GPT_CALLBACK_URL with auth success true , message and code and state
-        const openaiCallbackUrl = process.env.GPT_CALLBACK_URL;
         console.log('Redirecting to GPT_CALLBACK_URL:', process.env.GPT_CALLBACK_URL);
         console.log('Code:', code, 'State:', state);
-        res.redirect(`${openaiCallbackUrl}?auth_success=true&code=${code}&state=${state}&token=${jwtToken}`);
+        res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&code=${code}&state=${state}&token=${jwtToken}`);
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);
         res.status(500).send("Internal Server Error");
