@@ -28,8 +28,8 @@ router.get('/github/callback', async (req: Request, res: Response) => {
   try {
     // Directly call your /auth/token endpoint internally to exchange the code for a token
     const tokenResponse = await axios.post(`${process.env.SERVER_BASE_URL}/auth/token`, {
-      code: code,
-      state: state,
+      code,
+      state,
     }, { headers: { 'Content-Type': 'application/json' } });
 
     const { access_token } = tokenResponse.data;
@@ -75,41 +75,42 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 });
 
 // New endpoint to exchange the GitHub code for an access token
-router.post('/token', async (req: Request, res: Response) => {
-  const { code, state } = req.body;
- console.log('Exchanging code for token:', code, 'with state:', state);
-  try {
-    const params = new URLSearchParams();
-    if (process.env.GITHUB_CLIENT_ID) {
-        params.append('client_id', process.env.GITHUB_CLIENT_ID);
-    }
-    if (process.env.GITHUB_CLIENT_SECRET) {
-        params.append('client_secret', process.env.GITHUB_CLIENT_SECRET);
-    }
-    params.append('code', code);
-    params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL || '');
-    params.append('state', state);
+// router.post('/token', async (req: Request, res: Response) => {
+//   const { code, state } = req.body;
+//  console.log('Exchanging code for token:', code, 'with state:', state);
+//   try {
+//     const params = new URLSearchParams();
+//     if (process.env.GITHUB_CLIENT_ID) {
+//         params.append('client_id', process.env.GITHUB_CLIENT_ID);
+//     }
+//     if (process.env.GITHUB_CLIENT_SECRET) {
+//         params.append('client_secret', process.env.GITHUB_CLIENT_SECRET);
+//     }
+//     params.append('code', code);
+//     params.append('redirect_uri', process.env.GITHUB_CALLBACK_URL || '');
+//     params.append('state', state);
 
-    const response = await axios.post('https://github.com/login/oauth/access_token', params, {
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    });
+//     const response = await axios.post('https://github.com/login/oauth/access_token', params, {
+//         headers: {
+//             Accept: 'application/json',
+//             'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//     });
 
-    const accessTokenData = response.data;
-    if (accessTokenData.error) {
-      console.error('Access token error:', accessTokenData.error);
-      return res.status(400).json({ error: "Failed to obtain access token" });
-    }
+//     const accessTokenData = response.data;
+//     if (accessTokenData.error) {
+//       console.error('Access token error:', accessTokenData.error);
+//       return res.status(400).json({ error: "Failed to obtain access token" });
+//     }
 
-    // Return the access token JSON response
-    res.json({ access_token: accessTokenData.access_token, token_type: accessTokenData.token_type, scope: accessTokenData.scope });
-  } catch (error) {
-    console.error('Token exchange error:', error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     // Return the access token JSON response
+//     res.json({ access_token: accessTokenData.access_token, token_type: accessTokenData.token_type, scope: accessTokenData.scope });
+//   } catch (error) {
+//     console.error('Token exchange error:', error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
 
 
 

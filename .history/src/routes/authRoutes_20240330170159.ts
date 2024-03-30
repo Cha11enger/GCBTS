@@ -28,8 +28,8 @@ router.get('/github/callback', async (req: Request, res: Response) => {
   try {
     // Directly call your /auth/token endpoint internally to exchange the code for a token
     const tokenResponse = await axios.post(`${process.env.SERVER_BASE_URL}/auth/token`, {
-      code: code,
-      state: state,
+      code,
+      state,
     }, { headers: { 'Content-Type': 'application/json' } });
 
     const { access_token } = tokenResponse.data;
