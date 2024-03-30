@@ -85,7 +85,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         // res.redirect(`${redirectUri}?auth_success=true&message=Authentication successful`);
         // res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful`);
         // res.redirect to GPT_CALLBACK_URL with auth success true , message and code and state
-        res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful&code=${code}&state=${state}`);
+        
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);
         res.status(500).send("Internal Server Error");
