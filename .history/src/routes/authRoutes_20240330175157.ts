@@ -12,7 +12,7 @@ const jwtSecret: jwt.Secret = process.env.JWT_SECRET || 'default_jwt_secret';
 const router = express.Router();
 
 // express json middleware
-router.use(express.json());
+
 
 router.get('/github', (req: Request, res: Response) => {
     const state = req.query.state || 'no_state_provided';
