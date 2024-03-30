@@ -12,10 +12,10 @@ const router = express.Router();
 // Trigger GitHub OAuth flow
 router.get('/github', (req, res) => {
     // Optionally include a redirect path in the state parameter
-    // const redirectUri = req.query.redirect_uri || '/';
+    const redirectUri = req.query.redirect_uri || '/';
     const state = JSON.stringify({ 
       rand: Math.random().toString(36).substring(2, 15),
-    //   redirectUri
+      redirectUri
     });
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     
@@ -75,7 +75,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
         // Parse the state to get the original redirect URI
         const parsedState = JSON.parse(decodeURIComponent(state as string));
-        // const redirectUri = parsedState.redirectUri || '/';
+        const redirectUri = parsedState.redirectUri || '/';
 
         // Issue a JWT
         const jwtToken = jwt.sign({ accessToken: accessTokenData.access_token }, process.env.JWT_SECRET!, { expiresIn: '1h' });
@@ -86,7 +86,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         // res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful`);
         // res.redirect to GPT_CALLBACK_URL with auth success true , message and code and state
         console.log('Redirecting to GPT_CALLBACK_URL:', process.env.GPT_CALLBACK_URL);
-        console.log('Code:', code, 'State:', state);
+console.log('Code:', code, 'State:', state);
         res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful&code=${code}&state=${state}`);
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);

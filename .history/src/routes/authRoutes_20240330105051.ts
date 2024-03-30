@@ -15,7 +15,7 @@ router.get('/github', (req, res) => {
     // const redirectUri = req.query.redirect_uri || '/';
     const state = JSON.stringify({ 
       rand: Math.random().toString(36).substring(2, 15),
-    //   redirectUri
+      redirectUri
     });
     const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     
@@ -75,7 +75,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
         // Parse the state to get the original redirect URI
         const parsedState = JSON.parse(decodeURIComponent(state as string));
-        // const redirectUri = parsedState.redirectUri || '/';
+        const redirectUri = parsedState.redirectUri || '/';
 
         // Issue a JWT
         const jwtToken = jwt.sign({ accessToken: accessTokenData.access_token }, process.env.JWT_SECRET!, { expiresIn: '1h' });
