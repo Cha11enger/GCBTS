@@ -83,7 +83,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         // Redirect to the original page with a success message
         // Instead of redirecting with the token in the URL, consider using HTTP-only cookies or session storage
         // res.redirect(`${redirectUri}?auth_success=true&message=Authentication successful`);
-        res.redirect(`${process.env.GPT_CALLBACK_URL}?auth_success=true&message=Authentication successful`);
+        res.redirect(`${process.env.
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);
         res.status(500).send("Internal Server Error");
