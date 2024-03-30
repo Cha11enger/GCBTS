@@ -14,7 +14,7 @@ router.get('/github', (req, res) => {
     // Optionally include a redirect path in the state parameter
     // const redirectUri = req.query.redirect_uri || '/';
     const state = req.query.state || 'no_state_provided';
-    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${state}&scope=user:email,repo`;
+    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     
     res.redirect(url);
     // return res.status(200).send({ url });

@@ -13,8 +13,11 @@ const router = express.Router();
 router.get('/github', (req, res) => {
     // Optionally include a redirect path in the state parameter
     // const redirectUri = req.query.redirect_uri || '/';
-    const state = req.query.state || 'no_state_provided';
-    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${state}&scope=user:email,repo`;
+    const state = JSON.stringify({ 
+      rand: Math.random().toString(36).substring(2, 15),
+    //   redirectUri
+    });
+    const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state)}&scope=user:email,repo`;
     
     res.redirect(url);
     // return res.status(200).send({ url });
@@ -84,7 +87,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
         // res.redirect to GPT_CALLBACK_URL with auth success true , message and code and state
         console.log('Redirecting to GPT_CALLBACK_URL:', process.env.GPT_CALLBACK_URL);
         console.log('Code:', code, 'State:', state);
-        res.redirect(`${process.env.GPT_CALLBACK_URL}?code=${code}&state=${state}&auth_success=true`);
+        res.redirect(`${process.env.GPT_CALLBACK_URL}?code=${code}&state=${state}`);
     } catch (error) {
         console.error('GitHub OAuth callback error:', error);
         res.status(500).send("Internal Server Error");
