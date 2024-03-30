@@ -102,9 +102,9 @@ router.post('/token', async (req: Request, res: Response) => {
     }
 
     res.json({ access_token: accessTokenData.access_token, token_type: accessTokenData.token_type, scope: accessTokenData.scope });
-} catch (error: any) {
-  console.error('Token exchange error:', error.response?.data || error.message);
-  res.status(500).json({ error: "Internal Server Error" });
+} catch (error) {
+    console.error('Token exchange error:', error.response?.data || error.message);
+    res.status(500).json({ error: "Internal Server Error" });
 }
 });
 
