@@ -64,8 +64,6 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
     // Redirect with the JWT token
     // res.redirect(`${process.env.GPT_CALLBACK_URL}?token=${jwtToken}`);
-    console.log('User data:', user);
-    console.log('state:', state, 'code:', code);
     const openaiCallbackUrl = process.env.GPT_CALLBACK_URL || '';
     res.redirect(`${openaiCallbackUrl}?auth_success=true&state=${state}&code=${code}`);
   } catch (error) {

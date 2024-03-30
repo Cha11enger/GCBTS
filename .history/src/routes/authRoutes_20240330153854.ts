@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Trigger GitHub OAuth flow
 router.get('/github', (req: Request, res: Response) => {
-  const state = req.query.state || 'no_state_provided';
+  const state = state: req.query.state || 'no_state_provided';
   const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${state}&scope=user:email,repo`;
 
   console.log('Initiating OAuth with state:', state);
@@ -64,8 +64,6 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
     // Redirect with the JWT token
     // res.redirect(`${process.env.GPT_CALLBACK_URL}?token=${jwtToken}`);
-    console.log('User data:', user);
-    console.log('state:', state, 'code:', code);
     const openaiCallbackUrl = process.env.GPT_CALLBACK_URL || '';
     res.redirect(`${openaiCallbackUrl}?auth_success=true&state=${state}&code=${code}`);
   } catch (error) {

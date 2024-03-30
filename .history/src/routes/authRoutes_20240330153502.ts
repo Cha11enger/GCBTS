@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Trigger GitHub OAuth flow
 router.get('/github', (req: Request, res: Response) => {
-  const state = req.query.state || 'no_state_provided';
+  const state = encodeURIComponent(JSON.stringify({ state: req.query.state || 'no_state_provided' }));
   const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK_URL}&state=${state}&scope=user:email,repo`;
 
   console.log('Initiating OAuth with state:', state);
@@ -20,7 +20,7 @@ router.get('/github', (req: Request, res: Response) => {
 // Handle GitHub OAuth callback, now simplified to just save user data and redirect
 router.get('/github/callback', async (req: Request, res: Response) => {
   const { code, state } = req.query;
-    console.log('GitHub OAuth callback with code:', code, 'and state:', state);
+
   if (!code || !state) {
     return res.status(400).send("Error: Code and state are required.");
   }
@@ -64,10 +64,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
     // Redirect with the JWT token
     // res.redirect(`${process.env.GPT_CALLBACK_URL}?token=${jwtToken}`);
-    console.log('User data:', user);
-    console.log('state:', state, 'code:', code);
-    const openaiCallbackUrl = process.env.GPT_CALLBACK_URL || '';
-    res.redirect(`${openaiCallbackUrl}?auth_success=true&state=${state}&code=${code}`);
+    const open
   } catch (error) {
     console.error('GitHub OAuth callback error:', error);
     res.status(500).send("Internal Server Error");
@@ -77,7 +74,7 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 // New endpoint to exchange the GitHub code for an access token
 router.post('/auth/token', async (req: Request, res: Response) => {
   const { code, state } = req.body;
- console.log('Exchanging code for token:', code, 'with state:', state);
+
   try {
     const params = new URLSearchParams();
     if (process.env.GITHUB_CLIENT_ID) {
