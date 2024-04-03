@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: GitHub OAuth Integration for OpenAI GPT
+  description: Integrates GitHub OAuth for user authentication and authorization within the OpenAI GPT actions.
+  version: 1.0.0
+servers:
+  - url: https://gcbts.onrender.com
+paths:
+  /api/auth/github:
+    get:
+      summary: Redirects to GitHub for user authentication
+      operationId: redirectToGitHubAuthorization
+      responses:
+        "302":
+          description: Redirect to GitHub's OAuth page
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Redirecting to GitHub...
+  /api/auth/github/callback:
+    get:
+      summary: Handles the callback from GitHub after user authentication
+      operationId: handleGitHubCallback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirects to the specified callback URL with the authorization code
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Redirecting to the GPT callback URL...
+  /api/auth/token:
+    post:
+      summary: Exchanges the authorization code for an access token
+      operationId: exchangeAuthorizationCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Authorization code provided by GitHub
+              required:
+                - code
+      responses:
+        "200":
+          description: Access token and related information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: bearer
+                  scope:
+                    type: string
+                    example: user:email,repo
+        "500":
+          description: Error message if the token exchange fails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
