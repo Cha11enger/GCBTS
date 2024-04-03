@@ -22,34 +22,27 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Start GitHub OAuth flow
 router.get('/github', (req: Request, res: Response) => {
-    console.log('Entering /github route');
     const state = req.query.state || 'no_state_provided';
     const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_CALLBACK_URL}&state=${encodeURIComponent(state.toString())}&scope=user:email,repo`;
     res.redirect(url);
-    console.log('Exiting /github route');
 });
 
 // GitHub OAuth callback
 router.get('/github/callback', async (req: Request, res: Response) => {
-    console.log('Entering /github/callback route');
     const { code, state } = req.query;
     if (!code || !state) {
-        console.log('Error: Code and state are required.');
         return res.status(400).send("Error: Code and state are required.");
     }
     res.redirect(`${SERVER_BASE_URL}/auth/token?code=${code}&state=${encodeURIComponent(state.toString())}`);
-    console.log('Exiting /github/callback route');
 });
 
 // Exchange the authorization code for an access token
 router.post('/token', async (req: Request, res: Response) => {
-    console.log('Entering /token route');
     const code = req.query.code;
     const state = req.query.state;
 
     // Ensure that code and state are not undefined and are of type string
     if (typeof code !== 'string' || typeof state !== 'string') {
-        console.log('Code and state must be provided and must be strings.');
         return res.status(400).json({ error: 'Code and state must be provided and must be strings.' });
     }
 
@@ -64,7 +57,6 @@ router.post('/token', async (req: Request, res: Response) => {
         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', params, { headers: { Accept: 'application/json' } });
 
         if (tokenResponse.data.error) {
-            console.log('Failed to obtain access token');
             return res.status(400).json({ error: 'Failed to obtain access token' });
         }
 
@@ -93,7 +85,7 @@ router.post('/token', async (req: Request, res: Response) => {
         console.error('Token exchange error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-    console.log('Exiting /token route');
 });
+
 
 export default router;
