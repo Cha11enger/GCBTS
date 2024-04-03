@@ -1,4 +1,4 @@
-// src/routes/authRoutes.ts
+// sr
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import User from '../models/User';
