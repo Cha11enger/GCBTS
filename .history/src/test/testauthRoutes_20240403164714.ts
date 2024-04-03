@@ -89,9 +89,6 @@ router.post('/token', async (req: Request, res: Response) => {
             token_type: 'bearer',
             expires_in: 3600,
         });
-
-        // Redirect to GPT callback URL with state and code
-        res.redirect(`${GPT_CALLBACK_URL}?state=${encodeURIComponent(state.toString())}&code=${code}`);
     } catch (error) {
         console.error('Token exchange error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
