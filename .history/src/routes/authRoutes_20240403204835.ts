@@ -38,7 +38,7 @@ const redirectToGitHubAuthorization = (req: Request, res: Response) => {
 };
 
 // GitHub callback route - handles the callback and redirects to GPT
-const handleGitHubCallback = (req: Request, res: Response) => {
+const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Start of /github/callback function');
     const { code, state } = req.query;
     const GPT_CALLBACK_URL = process.env.GPT_CALLBACK_URL;
@@ -50,50 +50,42 @@ const handleGitHubCallback = (req: Request, res: Response) => {
     }
 
     // Ensure that the code parameter is always of type string
-    exchangeCodeForToken(code as string)
-        .then((tokenInfo) => {
-            if (!tokenInfo) {
-                console.error('Failed to exchange code for token');
-                res.status(500).send('Failed to exchange code for token');
-                return;
-            }
+    const tokenInfo = await exchangeCodeForToken(code as string);
 
-            // Fetch user info from GitHub using the access token
-            console.log('Fetching user info from GitHub...');
-            return axios.get('https://api.github.com/user', { headers: { Authorization: `token ${tokenInfo.access_token}` } })
-                .then((userInfoResponse) => {
-                    const user = userInfoResponse.data;
+    if (!tokenInfo) {
+        console.error('Failed to exchange code for token');
+        res.status(500).send('Failed to exchange code for token');
+        return;
+    }
 
-                    // Save or update user in your database
-                    const userData = {
-                        githubId: user.id,
-                        accessToken: tokenInfo.access_token,
-                        displayName: user.name || '',
-                        username: user.login,
-                        profileUrl: user.html_url,
-                        avatarUrl: user.avatar_url,
-                    };
+    //use tokenInfo to get user info from GitHub and save it to the database
+    // Fetch user info from GitHub using the access token
+    try {
+        console.log('Fetching user info from GitHub...');
+        const userInfoResponse = await axios.get('https://api.github.com/user', { headers: { Authorization: `token ${tokenInfo.access_token}` } });
+        const user = userInfoResponse.data;
 
-                    return User.findOneAndUpdate({ githubId: user.id }, userData, { upsert: true, new: true })
-                        .then(() => {
-                            // Redirect to GPT callback URL with the code for OpenAI to handle token exchange
-                            console.log('Redirecting to GPT callback URL:', `${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
-                            res.redirect(`${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
-                        })
-                        .catch((error) => {
-                            console.error('Error saving user to database:', error);
-                            res.status(500).send('Error saving user to database');
-                        });
-                })
-                .catch((error) => {
-                    console.error('Error fetching user info from GitHub:', error);
-                    res.status(500).send('Error fetching user info from GitHub');
-                });
-        })
-        .catch((error) => {
-            console.error('Error exchanging code for token:', error);
-            res.status(500).send('Failed to exchange code for token');
-        });
+        // Save or update user in your database
+        const userData = {
+            githubId: user.id,
+            accessToken: tokenInfo.access_token,
+            displayName: user.name || '',
+            username: user.login,
+            profileUrl: user.html_url,
+            avatarUrl: user.avatar_url,
+        };
+
+        await User.findOneAndUpdate({ githubId: user.id }, userData, { upsert: true, new: true });
+
+       //use.then a
+
+        // Redirect to GPT callback URL with the code for OpenAI to handle token exchange
+        console.log('Redirecting to GPT callback URL:', `${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
+        res.redirect(`${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
+    } catch (error) {
+        console.error('Error handling GitHub callback:', error);
+        res.status(500).send('Error handling GitHub callback');
+    }
 
     console.log('End of /github/callback function');
 };
