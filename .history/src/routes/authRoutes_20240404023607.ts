@@ -110,10 +110,10 @@ const exchangeCodeForToken = async (code: string) => {
         return {
             access_token,
             token_type,
-            scope,
+            scope
         };
-      
 
+        
     } catch (error) {
         console.error('Error exchanging code for token:', error);
         throw new Error('Failed to exchange code for token');

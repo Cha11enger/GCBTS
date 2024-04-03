@@ -79,8 +79,8 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
         res.send(tokenInfo);
 
         // Redirect to GPT callback URL with the code for OpenAI to handle token exchange
-        // console.log('Redirecting to GPT callback URL:', `${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
-        // res.redirect(`${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
+        console.log('Redirecting to GPT callback URL:', `${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
+        res.redirect(`${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
     } catch (error) {
         console.error('Error handling GitHub callback:', error);
         res.status(500).send('Error handling GitHub callback');
@@ -110,10 +110,8 @@ const exchangeCodeForToken = async (code: string) => {
         return {
             access_token,
             token_type,
-            scope,
+            scope
         };
-      
-
     } catch (error) {
         console.error('Error exchanging code for token:', error);
         throw new Error('Failed to exchange code for token');

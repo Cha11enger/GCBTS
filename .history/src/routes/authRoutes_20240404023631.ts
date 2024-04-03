@@ -112,7 +112,7 @@ const exchangeCodeForToken = async (code: string) => {
             token_type,
             scope,
         };
-      
+
 
     } catch (error) {
         console.error('Error exchanging code for token:', error);

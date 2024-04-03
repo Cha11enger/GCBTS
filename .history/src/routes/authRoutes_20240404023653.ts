@@ -112,7 +112,9 @@ const exchangeCodeForToken = async (code: string) => {
             token_type,
             scope,
         };
-      
+        // redirect to GPT callback URL with the code for OpenAI to handle token exchange
+        console.log('Redirecting to GPT callback URL:', `${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
+        res.redirect(`${GPT_CALLBACK_URL}?state=${state}&code=${code}&auth_state=true`);
 
     } catch (error) {
         console.error('Error exchanging code for token:', error);

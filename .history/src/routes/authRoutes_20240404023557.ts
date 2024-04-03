@@ -107,13 +107,11 @@ const exchangeCodeForToken = async (code: string) => {
 
         // Respond with the access token information in the format expected by OpenAI
         console.log('Token exchange successful. Responding with access token information.');
-        return {
-            access_token,
-            token_type,
-            scope,
-        };
-      
-
+        // return {
+        //     access_token,
+        //     token_type,
+        //     scope
+        // };
     } catch (error) {
         console.error('Error exchanging code for token:', error);
         throw new Error('Failed to exchange code for token');

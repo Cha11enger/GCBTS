@@ -111,6 +111,7 @@ const exchangeCodeForToken = async (code: string) => {
             access_token,
             token_type,
             scope,
+            
         };
       
 
