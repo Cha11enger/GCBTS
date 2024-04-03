@@ -38,21 +38,14 @@ router.get('/github/callback', async (req: Request, res: Response) => {
 
 // Exchange the authorization code for an access token
 router.post('/auth/token', async (req: Request, res: Response) => {
-    const code = req.query.code;
-    const state = req.query.state;
-
-    // Ensure that code and state are not undefined and are of type string
-    if (typeof code !== 'string' || typeof state !== 'string') {
-        return res.status(400).json({ error: 'Code and state must be provided and must be strings.' });
-    }
-
+    const { code, state } = req.query;
     try {
         const params = new URLSearchParams({
             client_id: GITHUB_CLIENT_ID,
             client_secret: GITHUB_CLIENT_SECRET,
-            code: code,
+            code: code.toString(),
             redirect_uri: GPT_CALLBACK_URL,
-            state: state,
+            state: state.toString(),
         });
         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', params, { headers: { Accept: 'application/json' } });
 
@@ -62,7 +55,7 @@ router.post('/auth/token', async (req: Request, res: Response) => {
 
         const accessToken = tokenResponse.data.access_token;
         const userResponse = await axios.get('https://api.github.com/user', { headers: { Authorization: `Bearer ${accessToken}` } });
-
+        
         // Example user data saving logic
         const githubId = userResponse.data.id.toString();
         const updatedUser = await User.findOneAndUpdate({ githubId }, {
@@ -86,6 +79,5 @@ router.post('/auth/token', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 export default router;
