@@ -84,12 +84,12 @@ router.post('/token', async (req, res) => {
     console.log('End of /token function');
 });
 
-// function generateRandomString(length = 16) {
-//     console.log('Start of generateRandomString function');
-//     const randomString = [...Array(length)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-//     console.log('Generated random string:', randomString);
-//     console.log('End of generateRandomString function');
-//     return randomString;
-// }
+function generateRandomString(length = 16) {
+    console.log('Start of generateRandomString function');
+    const randomString = [...Array(length)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+    console.log('Generated random string:', randomString);
+    console.log('End of generateRandomString function');
+    return randomString;
+}
 
 export default router;
