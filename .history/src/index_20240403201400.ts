@@ -3,7 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/database';
 //import routes from './routes';
-import routes from './routes';
+import authRoutes from './routes/authRoutes';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get('/', (req, res) => res.send('Hello World!'));
-app.use('/api', routes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

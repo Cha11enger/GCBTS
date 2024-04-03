@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get('/', (req, res) => res.send('Hello World!'));
-app.use('/api', routes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
