@@ -27,7 +27,6 @@ router.get('/github/callback', async (req: Request, res: Response) => {
     const { code, state } = req.query;
     console.log('GitHub OAuth callback with code:', code, 'and state:', state);
     if (!code || !state) {
-        console.error('Error: Code and state are required.');
         return res.status(400).send("Error: Code and state are required.");
     }
 
@@ -79,7 +78,6 @@ router.post('/auth/token', async (req: Request, res: Response) => {
         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', params.toString(), { headers: { Accept: 'application/json' } });
         
         if (tokenResponse.data.error) {
-            console.error('Failed to obtain access token');
             return res.status(400).json({ error: "Failed to obtain access token" });
         }
 
