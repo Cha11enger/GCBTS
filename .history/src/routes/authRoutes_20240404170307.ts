@@ -16,7 +16,6 @@ const {
 const redirectToGitHubAuth = (req: Request, res: Response) => {
     console.log('Starting redirectToGitHubAuth');
     const state = req.query.state || 'no_state_provided'; // State can be used for CSRF protection
-    console.log('State:', state);
     // custom code
     // const code = 'example_code'; // Simulated for demonstration
     const scope = 'read:user,user:email'; // Minimal scope for user identification
@@ -30,8 +29,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    console.log('Code:', code), 
-    console.log('State:', state);
+    console.log('Code:', code), console.log('State:', state);
     const openaiCallbackUrl = GPT_CALLBACK_URL;
    
     if (!code) {
@@ -71,8 +69,6 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
         // Redirect or respond after successful authentication
         // For example, redirect to a 'success' page or back to the application
         // res.redirect('/auth/success'); // Adjust as needed
-        console.log('Redirecting to:', openaiCallbackUrl);
-        console.log('Code:', code);
         res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
     } catch (error) {
         console.error('Authentication failed:', error);

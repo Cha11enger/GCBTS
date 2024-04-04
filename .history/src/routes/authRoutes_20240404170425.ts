@@ -72,7 +72,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
         // For example, redirect to a 'success' page or back to the application
         // res.redirect('/auth/success'); // Adjust as needed
         console.log('Redirecting to:', openaiCallbackUrl);
-        console.log('Code:', code);
+        con
         res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
     } catch (error) {
         console.error('Authentication failed:', error);
