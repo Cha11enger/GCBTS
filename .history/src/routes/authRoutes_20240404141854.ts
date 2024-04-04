@@ -16,10 +16,8 @@ const {
 const redirectToGitHubAuth = (req: Request, res: Response) => {
     console.log('Starting redirectToGitHubAuth');
     const state = req.query.state || 'no_state_provided'; // State can be used for CSRF protection
-    // custom code
-    const code = 'example_code'; // Simulated for demonstration
     const scope = 'read:user,user:email'; // Minimal scope for user identification
-    const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL || '')}&scope=${encodeURIComponent(scope)}&state=${state}&code=${code}`;
+    const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL || '')}&scope=${encodeURIComponent(scope)}&state=${state}`;
     res.redirect(url);
     console.log('Ending redirectToGitHubAuth');
 };
@@ -79,9 +77,8 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 const exchangeCodeForToken = async (req: Request, res: Response) => {
     console.log('Starting exchangeCodeForToken');
-    const code = req.body.code; // Get the code from req.body
-    console.log('Code:', code); // Console the code
-
+    // const { code } = req.query;
+    // get code from authoriza
     if (!code) {
         console.error('Code parameter is required.');
         return res.status(400).json({ error: 'Code parameter is required.' });

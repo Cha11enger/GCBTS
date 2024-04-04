@@ -79,9 +79,9 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 const exchangeCodeForToken = async (req: Request, res: Response) => {
     console.log('Starting exchangeCodeForToken');
-    const code = req.body.code; // Get the code from req.body
-    console.log('Code:', code); // Console the code
-
+    // const { code } = req.query;
+    // get code from authorization url which is /auth/github
+    const { code } = 'req.query;'
     if (!code) {
         console.error('Code parameter is required.');
         return res.status(400).json({ error: 'Code parameter is required.' });
