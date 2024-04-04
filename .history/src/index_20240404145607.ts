@@ -15,10 +15,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// app.get('/', (req, res) => res.send('Hello World!'));
+
+app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', routes);
 
 const PORT = process.env.PORT || 3000;

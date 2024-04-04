@@ -31,7 +31,8 @@
     "mongoose": "^8.2.4",
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",
-    "passport-github": "^1.1.0"
+    "passport-github": "^1.1.0",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@types/connect-mongodb-session": "^2.4.7",
