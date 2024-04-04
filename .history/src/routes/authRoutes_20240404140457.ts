@@ -9,7 +9,6 @@ const {
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     GITHUB_CALLBACK_URL,
-    GPT_CALLBACK_URL
 } = process.env;
 
 // Redirects the user to GitHub's authorization page
@@ -27,8 +26,16 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    const openaiCallbackUrl = GPT_CALLBACK_URL;
-   
+    const openaiCallbackUrl = process.env.OPENAI_CALLBACK_URL;
+
+    if(!code) {
+      res.redirect(`${openaiCallbackUrl}?error=authorization_failed&state=${state}`);
+    } 
+
+    if (code) {
+    } else {
+        res.redirect(`${openaiCallbackUrl}?error=authorization_failed&state=${state}`);
+    }
     if (!code) {
         console.error('Authorization code is required');
         return res.status(400).send('Authorization code is required');
@@ -65,8 +72,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 
         // Redirect or respond after successful authentication
         // For example, redirect to a 'success' page or back to the application
-        // res.redirect('/auth/success'); // Adjust as needed
-        res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
+        res.redirect('/auth/success'); // Adjust as needed
     } catch (error) {
         console.error('Authentication failed:', error);
         res.status(500).send('Authentication failed');

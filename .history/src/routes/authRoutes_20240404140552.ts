@@ -27,7 +27,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    const openaiCallbackUrl = GPT_CALLBACK_URL;
+    const openaiCallbackUrl = process.env.GPT_CALLBACK_URL;
    
     if (!code) {
         console.error('Authorization code is required');
