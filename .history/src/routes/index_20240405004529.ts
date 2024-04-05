@@ -1,11 +1,11 @@
 // src/routes/index.ts
 import express from 'express';
-import { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken } from './authRoutes';
+import { githubOauth} from './authRoutes';
 
 const router = express.Router();
 
-router.get('/auth/github', redirectToGitHubAuth);
-router.get('/auth/github/callback', handleGitHubCallback);
+router.get('/auth/github', githubOauth);
+router.get('/auth/github/callback', );
 // router.use('auth/token', exchangeCodeForToken);
 // router.post('/auth/token', async (req, res) => {
 //     const { code } = req.body; // Make sure to validate the presence of 'code'
