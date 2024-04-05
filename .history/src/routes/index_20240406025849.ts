@@ -1,5 +1,5 @@
 import express from 'express';
-import {redirectToGitHubAuth, handleGitHubCallback } from './authRoutes';
+import {redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken } from './authRoutes';
 
 const router = express.Router();
 
