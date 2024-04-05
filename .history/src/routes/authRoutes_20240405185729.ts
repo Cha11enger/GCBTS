@@ -29,12 +29,11 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
     // const state = req.query // State can be used for CSRF protection
     // const state = generateState(10);
     const state = req.query.state || 'no_state_provided'; // State can be used for CSRF protection
-    const code = req.query.code;
     console.log('State:', state);
     // custom code
     // const code = 'example_code'; // Simulated for demonstration
     const scope = 'read:user,user:email'; // Minimal scope for user identification
-    const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL || '')}&scope=${encodeURIComponent(scope)}&state=${state}&code=${code}`;
+    const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL || '')}&scope=${encodeURIComponent(scope)}&state=${state}`;
     res.redirect(url);
     console.log('Redirecting to:', url);
     console.log('Ending redirectToGitHubAuth');
@@ -99,7 +98,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 const exchangeCodeForToken = async (req: Request, res: Response) => {
     console.log('Starting exchangeCodeForToken');
-    const code = req.query // Get the code from req.query
+    const code = req.query; // Get the code from req.body
     console.log('Code:', code); // Console the code
 
     if (!code) {
@@ -108,15 +107,13 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
     }
 
     try {
-        const credentials = Buffer.from(`${GITHUB_CLIENT_ID}:${GITHUB_CLIENT_SECRET}`).toString('base64');
         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+            client_id: GITHUB_CLIENT_ID,
+            client_secret: GITHUB_CLIENT_SECRET,
             code,
             redirect_uri: GITHUB_CALLBACK_URL,
         }, {
-            headers: { 
-                Accept: 'application/json',
-                Authorization: `Basic ${credentials}`
-            },
+            headers: { Accept: 'application/json' },
         });
 
         const { access_token, token_type } = tokenResponse.data;

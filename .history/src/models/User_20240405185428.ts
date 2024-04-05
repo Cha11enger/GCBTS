@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   profileUrl: String,
   avatarUrl: String,
-  accessToken: String,
+  acc
   // Add other fields as necessary
 });
 
