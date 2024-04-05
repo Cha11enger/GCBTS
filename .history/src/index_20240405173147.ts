@@ -5,7 +5,7 @@ import connectDB from './config/database';
 //import routes from './routes';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import routes from './routes';
+// import authRoutes from './routes/authRoutes';
 import session from 'express-session';
 import passport from 'passport';
 
@@ -30,7 +30,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // app.get('/', (req, res) => res.send('Hello World!'));
-app.use('/api', routes);
+app.use('/api', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

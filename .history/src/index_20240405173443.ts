@@ -30,7 +30,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // app.get('/', (req, res) => res.send('Hello World!'));
-app.use('/api', routes);
+app.use('/api', rou);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
