@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/database';
 //import routes from './routes';
 import cookieParser from 'cookie-parser';
-// import path from 'path';
+import path from 'path';
 import routes from './routes';
 import session from 'express-session';
 import passport from 'passport';

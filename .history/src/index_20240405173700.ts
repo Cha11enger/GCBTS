@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/database';
 //import routes from './routes';
 import cookieParser from 'cookie-parser';
-// import path from 'path';
+import path from 'path';
 import routes from './routes';
 import session from 'express-session';
 import passport from 'passport';
@@ -29,7 +29,7 @@ app.use(passport.session());
 // Serve static files from the public directory
 // app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.get('/', (req, res) => res.send('Hello World!'));
+// app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', routes);
 
 const PORT = process.env.PORT || 3000;
