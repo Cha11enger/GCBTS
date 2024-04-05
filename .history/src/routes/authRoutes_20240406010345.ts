@@ -40,8 +40,7 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
     console.log('Ending redirectToGitHubAuth');
 };
 
-// Handles the callback from GitHub after user authorization in post request
-
+// Handles the callback from GitHub after user authorization
 const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
@@ -134,9 +133,9 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 
 
 
-const exchangeCodeForToken = async (req: Request, res: Response, ) => {
+const exchangeCodeForToken = async (req: Request, res: Response) => {
     console.log('Starting exchangeCodeForToken');
-    const { code } = req.body; // Get the code from req.body
+    const { code = req.query; // Get the code from req.body
     console.log('Code:', code); // Console the code
 
     if (!code) {

@@ -41,61 +41,62 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
 };
 
 // Handles the callback from GitHub after user authorization in post request
+co
 
-const handleGitHubCallback = async (req: Request, res: Response) => {
-    console.log('Starting handleGitHubCallback');
-    // const { code } = req.query;
-    const { code, state } = req.query;
-    console.log('Code:', code), 
-    console.log('State:', state);
-    const openaiCallbackUrl = GPT_CALLBACK_URL;
+// const handleGitHubCallback = async (req: Request, res: Response) => {
+//     console.log('Starting handleGitHubCallback');
+//     // const { code } = req.query;
+//     const { code, state } = req.query;
+//     console.log('Code:', code), 
+//     console.log('State:', state);
+//     const openaiCallbackUrl = GPT_CALLBACK_URL;
    
-    if (!code) {
-        console.error('Authorization code is required');
-        return res.status(400).send('Authorization code is required');
-    }
+//     if (!code) {
+//         console.error('Authorization code is required');
+//         return res.status(400).send('Authorization code is required');
+//     }
 
-    try {
-        // Exchange the authorization code for an access token
-        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
-            code,
-            redirect_uri: GITHUB_CALLBACK_URL,
-        }, {
-            headers: { Accept: 'application/json' },
-        });
+//     try {
+//         // Exchange the authorization code for an access token
+//         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+//             client_id: GITHUB_CLIENT_ID,
+//             client_secret: GITHUB_CLIENT_SECRET,
+//             code,
+//             redirect_uri: GITHUB_CALLBACK_URL,
+//         }, {
+//             headers: { Accept: 'application/json' },
+//         });
 
-        const { access_token } = tokenResponse.data;
+//         const { access_token } = tokenResponse.data;
 
-        // Fetch the user's profile information from GitHub
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${access_token}` },
-        });
+//         // Fetch the user's profile information from GitHub
+//         const userResponse = await axios.get('https://api.github.com/user', {
+//             headers: { Authorization: `token ${access_token}` },
+//         });
 
-        const { login, id, avatar_url, html_url } = userResponse.data;
+//         const { login, id, avatar_url, html_url } = userResponse.data;
 
-        // Save or update the user's information in the database
-        await User.findOneAndUpdate({ githubId: id }, {
-            username: login,
-            githubId: id,
-            profileUrl: html_url,
-            avatarUrl: avatar_url,
-            accessToken: access_token, // Storing access token is optional and should be handled securely
-        }, { upsert: true, new: true });
+//         // Save or update the user's information in the database
+//         await User.findOneAndUpdate({ githubId: id }, {
+//             username: login,
+//             githubId: id,
+//             profileUrl: html_url,
+//             avatarUrl: avatar_url,
+//             accessToken: access_token, // Storing access token is optional and should be handled securely
+//         }, { upsert: true, new: true });
 
-        // Redirect or respond after successful authentication
-        // For example, redirect to a 'success' page or back to the application
-        // res.redirect('/auth/success'); // Adjust as needed
-        console.log('Redirecting to:', openaiCallbackUrl);
-        console.log('Code:', code);
-        res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
-    } catch (error) {
-        console.error('Authentication failed:', error);
-        res.status(500).send('Authentication failed');
-    }
-    console.log('Ending handleGitHubCallback');
-};
+//         // Redirect or respond after successful authentication
+//         // For example, redirect to a 'success' page or back to the application
+//         // res.redirect('/auth/success'); // Adjust as needed
+//         console.log('Redirecting to:', openaiCallbackUrl);
+//         console.log('Code:', code);
+//         res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
+//     } catch (error) {
+//         console.error('Authentication failed:', error);
+//         res.status(500).send('Authentication failed');
+//     }
+//     console.log('Ending handleGitHubCallback');
+// };
 
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 // async function exchangeCodeForToken(code: string): Promise<string> {

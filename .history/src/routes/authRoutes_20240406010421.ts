@@ -40,8 +40,7 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
     console.log('Ending redirectToGitHubAuth');
 };
 
-// Handles the callback from GitHub after user authorization in post request
-
+// Handles the callback from GitHub after user authorization
 const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;

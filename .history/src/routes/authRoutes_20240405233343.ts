@@ -34,14 +34,14 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
     // custom code
     // const code = 'example_code'; // Simulated for demonstration
     const scope = 'read:user,user:email'; // Minimal scope for user identification
+    // pass 2 urls to the callback
     const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(GITHUB_CALLBACK_URL || '')}&scope=${encodeURIComponent(scope)}&state=${state}`;
     res.redirect(url);
     console.log('Redirecting to:', url);
     console.log('Ending redirectToGitHubAuth');
 };
 
-// Handles the callback from GitHub after user authorization in post request
-
+// Handles the callback from GitHub after user authorization
 const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
@@ -134,9 +134,9 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 
 
 
-const exchangeCodeForToken = async (req: Request, res: Response, ) => {
+const exchangeCodeForToken = async (req: Request, res: Response) => {
     console.log('Starting exchangeCodeForToken');
-    const { code } = req.body; // Get the code from req.body
+    const code = req.query; // Get the code from req.body
     console.log('Code:', code); // Console the code
 
     if (!code) {

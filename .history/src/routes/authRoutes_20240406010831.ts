@@ -42,11 +42,13 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
 
 // Handles the callback from GitHub after user authorization in post request
 
+<<<<<<<<<<<<<<  ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>>
 const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
-    // const { code } = req.query;
+-    // const { code } = req.query;
     const { code, state } = req.query;
-    console.log('Code:', code), 
++    console.log('Code:', code);
+-    console.log('Code:', code), 
     console.log('State:', state);
     const openaiCallbackUrl = GPT_CALLBACK_URL;
    
@@ -97,6 +99,8 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Ending handleGitHubCallback');
 };
 
++// This is a POST function.
+<<<<<<<  48eeb16c-4997-4552-8255-397ba44b9119  >>>>>>>
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 // async function exchangeCodeForToken(code: string): Promise<string> {
 //     const clientId = process.env.GITHUB_CLIENT_ID;

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/oauth/authorize', redirectToGitHubAuth);
 router.get('/oauth/authorize/callback', handleGitHubCallback);
-router.post('/oauth/exchange', handleGitHubCallback);
+router.post('/oauth/exchange', exchangeCodeForToken);
 
 export default router;
 // Path: src/routes/authRoutes.ts

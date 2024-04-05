@@ -40,8 +40,7 @@ const redirectToGitHubAuth = (req: Request, res: Response) => {
     console.log('Ending redirectToGitHubAuth');
 };
 
-// Handles the callback from GitHub after user authorization in post request
-
+// Handles the callback from GitHub after user authorization
 const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
@@ -134,34 +133,46 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 
 
 
-const exchangeCodeForToken = async (req: Request, res: Response, ) => {
-    console.log('Starting exchangeCodeForToken');
-    const { code } = req.body; // Get the code from req.body
-    console.log('Code:', code); // Console the code
+<<<<<<<<<<<<<<  ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>>
+const exchangeCodeForToken = async (req: Request, res: Response) => {
++    const { code } = req.query;
+-    console.log('Starting exchangeCodeForToken');
+-    const code = req.query; // Get the code from req.body
+-    console.log('Code:', code); // Console the code
 
     if (!code) {
-        console.error('Code parameter is required.');
+-        console.error('Code parameter is required.');
         return res.status(400).json({ error: 'Code parameter is required.' });
     }
 
     try {
-        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
-            code,
-            redirect_uri: GITHUB_CALLBACK_URL,
-        }, {
-            headers: { Accept: 'application/json' },
-        });
++        const tokenResponse = await axios.post(
++            'https://github.com/login/oauth/access_token',
++            { client_id: GITHUB_CLIENT_ID, client_secret: GITHUB_CLIENT_SECRET, code, redirect_uri: GITHUB_CALLBACK_URL },
++            { headers: { Accept: 'application/json'} },
++        );
+-        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+-            client_id: GITHUB_CLIENT_ID,
+-            client_secret: GITHUB_CLIENT_SECRET,
+-            code,
+-            redirect_uri: GITHUB_CALLBACK_URL,
+-        }, {
+-            headers: { Accept: 'application/json' },
+-        });
 
-        const { access_token, token_type } = tokenResponse.data;
++        const { access_token } = tokenResponse.data;
+-        const { access_token, token_type } = tokenResponse.data;
 
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${access_token}` },
-        });
++        const userResponse = await axios.get('https://api.github.com/user', { headers: { Authorization: `token ${access_token}` } });
+-        const userResponse = await axios.get('https://api.github.com/user', {
+-            headers: { Authorization: `token ${access_token}` },
+-        });
 
         const { login, id, avatar_url, html_url } = userResponse.data;
 
++        await User.findOneAndUpdate(
++            { githubId: id },
++            { username: login, githubId: id, profileUrl: html_url, avatarUrl: avatar_url, accessToken: access_token },
         // update the access token in the database
         await User.findOneAndUpdate({ githubId: id }, {
             username: login,
@@ -184,5 +195,6 @@ const exchangeCodeForToken = async (req: Request, res: Response, ) => {
     }
     console.log('Ending exchangeCodeForToken');
 };
+<<<<<<<  e3a1fd99-af0c-4b37-b9ff-420df3d6e434  >>>>>>>
 
 export { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken };
