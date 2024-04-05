@@ -46,10 +46,10 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    console.log('Code:', code),
-        console.log('State:', state);
+    console.log('Code:', code), 
+    console.log('State:', state);
     const openaiCallbackUrl = GPT_CALLBACK_URL;
-
+   
     if (!code) {
         console.error('Authorization code is required');
         return res.status(400).send('Authorization code is required');
@@ -97,70 +97,14 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Ending handleGitHubCallback');
 };
 
-const exchangeCodeForToken = async (req: Request, res: Response) => {
-    console.log('Starting exchangeCodeForToken');
-    // const { code } = req.query;
-    const { code, state } = req.query;
-    console.log('Code:', code),
-        console.log('State:', state);
-    const openaiCallbackUrl = GPT_CALLBACK_URL;
 
-    if (!code) {
-        console.error('Authorization code is required');
-        return res.status(400).send('Authorization code is required');
-    }
-
-    try {
-        // Exchange the authorization code for an access token
-        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
-            code,
-            redirect_uri: GITHUB_CALLBACK_URL,
-        }, {
-            headers: { Accept: 'application/json' },
-        });
-
-        const { access_token, token_type } = tokenResponse.data;
-
-        // Fetch the user's profile information from GitHub
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${access_token}` },
-        });
-
-        const { login, id, avatar_url, html_url } = userResponse.data;
-
-        // Save or update the user's information in the database
-        await User.findOneAndUpdate({ githubId: id }, {
-            username: login,
-            githubId: id,
-            profileUrl: html_url,
-            avatarUrl: avatar_url,
-            accessToken: access_token, // Storing access token is optional and should be handled securely
-        }, { upsert: true, new: true });
-
-        // Redirect or respond after successful authentication
-        // For example, redirect to a 'success' page or back to the application
-        // res.redirect('/auth/success'); // Adjust as needed
-        res.json({
-            access_token: access_token,
-            token_type: token_type,
-            refresh_token: "example_refresh_token", // Simulated for demonstration
-            expires_in: 3600, // Simulated value (1 hour)
-        });
-    } catch (error) {
-        console.error('Failed to exchange code for token:', error);
-        res.status(500).json({ error: 'Failed to exchange authorization code for token.' });
-    }
-    console.log('Ending exchangeCodeForToken');
-};
 
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
 // async function exchangeCodeForToken(code: string): Promise<string> {
 //     const clientId = process.env.GITHUB_CLIENT_ID;
 //     const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 //     const redirectUri = `${process.env.SERVER_BASE_URL}/api/auth/github/callback`;
-
+  
 //     const response = await fetch('https://github.com/login/oauth/access_token', {
 //       method: 'POST',
 //       headers: {
@@ -174,73 +118,73 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
 //         redirect_uri: redirectUri,
 //       }),
 //     });
-
+  
 //     const data = await response.json();
 //     if (!response.ok || data.error) {
 //       throw new Error(data.error_description || 'Failed to exchange code for token.');
 //     }
-
+  
 //     // Additional safety check for the response Content-Type
 //     if (!response.headers.get('content-type')?.includes('application/json')) {
 //       throw new TypeError("Oops, we haven't got JSON!");
 //     }
 
-
-
+    
+  
 //     return data.access_token;
 //   }
 
 
 
-// const exchangeCodeForToken = async (req: Request, res: Response, ) => {
-//     console.log('Starting exchangeCodeForToken');
-//     const { code } = req.body; // Get the code from req.body
-//     console.log('Code:', code); // Console the code
+const exchangeCodeForToken = async (req: Request, res: Response, ) => {
+    console.log('Starting exchangeCodeForToken');
+    const { code } = req.body; // Get the code from req.body
+    console.log('Code:', code); // Console the code
 
-//     if (!code) {
-//         console.error('Code parameter is required.');
-//         return res.status(400).json({ error: 'Code parameter is required.' });
-//     }
+    if (!code) {
+        console.error('Code parameter is required.');
+        return res.status(400).json({ error: 'Code parameter is required.' });
+    }
 
-//     try {
-//         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-//             client_id: GITHUB_CLIENT_ID,
-//             client_secret: GITHUB_CLIENT_SECRET,
-//             code,
-//             redirect_uri: GITHUB_CALLBACK_URL,
-//         }, {
-//             headers: { Accept: 'application/json' },
-//         });
+    try {
+        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+            client_id: GITHUB_CLIENT_ID,
+            client_secret: GITHUB_CLIENT_SECRET,
+            code,
+            redirect_uri: GITHUB_CALLBACK_URL,
+        }, {
+            headers: { Accept: 'application/json' },
+        });
 
-//         const { access_token, token_type } = tokenResponse.data;
+        const { access_token, token_type } = tokenResponse.data;
 
-//         const userResponse = await axios.get('https://api.github.com/user', {
-//             headers: { Authorization: `token ${access_token}` },
-//         });
+        const userResponse = await axios.get('https://api.github.com/user', {
+            headers: { Authorization: `token ${access_token}` },
+        });
 
-//         const { login, id, avatar_url, html_url } = userResponse.data;
+        const { login, id, avatar_url, html_url } = userResponse.data;
 
-//         // update the access token in the database
-//         await User.findOneAndUpdate({ githubId: id }, {
-//             username: login,
-//             githubId: id,
-//             profileUrl: html_url,
-//             avatarUrl: avatar_url,
-//             accessToken: access_token, // Storing access token is optional and should be handled securely
-//         }, { upsert: true, new: true });
+        // update the access token in the database
+        await User.findOneAndUpdate({ githubId: id }, {
+            username: login,
+            githubId: id,
+            profileUrl: html_url,
+            avatarUrl: avatar_url,
+            accessToken: access_token, // Storing access token is optional and should be handled securely
+        }, { upsert: true, new: true });
 
-//         // Respond with the token information, including simulated fields as necessary
-//         res.json({
-//             access_token: access_token,
-//             token_type: token_type,
-//             refresh_token: "example_refresh_token", // Simulated for demonstration
-//             expires_in: 3600, // Simulated value (1 hour)
-//         });
-//     } catch (error) {
-//         console.error('Failed to exchange code for token:', error);
-//         res.status(500).json({ error: 'Failed to exchange authorization code for token.' });
-//     }
-//     console.log('Ending exchangeCodeForToken');
-// };
+        // Respond with the token information, including simulated fields as necessary
+        res.json({
+            access_token: access_token,
+            token_type: token_type,
+            refresh_token: "example_refresh_token", // Simulated for demonstration
+            expires_in: 3600, // Simulated value (1 hour)
+        });
+    } catch (error) {
+        console.error('Failed to exchange code for token:', error);
+        res.status(500).json({ error: 'Failed to exchange authorization code for token.' });
+    }
+    console.log('Ending exchangeCodeForToken');
+};
 
 export { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken };

@@ -46,10 +46,10 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    console.log('Code:', code),
-        console.log('State:', state);
+    console.log('Code:', code), 
+    console.log('State:', state);
     const openaiCallbackUrl = GPT_CALLBACK_URL;
-
+   
     if (!code) {
         console.error('Authorization code is required');
         return res.status(400).send('Authorization code is required');
@@ -97,14 +97,14 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Ending handleGitHubCallback');
 };
 
-const exchangeCodeForToken = async (req: Request, res: Response) => {
-    console.log('Starting exchangeCodeForToken');
+const handleGitHubCallback = async (req: Request, res: Response) => {
+    console.log('Starting handleGitHubCallback');
     // const { code } = req.query;
     const { code, state } = req.query;
-    console.log('Code:', code),
-        console.log('State:', state);
+    console.log('Code:', code), 
+    console.log('State:', state);
     const openaiCallbackUrl = GPT_CALLBACK_URL;
-
+   
     if (!code) {
         console.error('Authorization code is required');
         return res.status(400).send('Authorization code is required');
@@ -121,7 +121,7 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
             headers: { Accept: 'application/json' },
         });
 
-        const { access_token, token_type } = tokenResponse.data;
+        const { access_token } = tokenResponse.data;
 
         // Fetch the user's profile information from GitHub
         const userResponse = await axios.get('https://api.github.com/user', {
@@ -142,17 +142,14 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
         // Redirect or respond after successful authentication
         // For example, redirect to a 'success' page or back to the application
         // res.redirect('/auth/success'); // Adjust as needed
-        res.json({
-            access_token: access_token,
-            token_type: token_type,
-            refresh_token: "example_refresh_token", // Simulated for demonstration
-            expires_in: 3600, // Simulated value (1 hour)
-        });
+        console.log('Redirecting to:', openaiCallbackUrl);
+        console.log('Code:', code);
+        res.redirect(`${openaiCallbackUrl}?code=${code}&state=${state}`);
     } catch (error) {
-        console.error('Failed to exchange code for token:', error);
-        res.status(500).json({ error: 'Failed to exchange authorization code for token.' });
+        console.error('Authentication failed:', error);
+        res.status(500).send('Authentication failed');
     }
-    console.log('Ending exchangeCodeForToken');
+    console.log('Ending handleGitHubCallback');
 };
 
 // Exchanges an authorization code for a token, formatted for Custom GPT Actions OAuth, just get the access token from callback and res.json it
@@ -160,7 +157,7 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
 //     const clientId = process.env.GITHUB_CLIENT_ID;
 //     const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 //     const redirectUri = `${process.env.SERVER_BASE_URL}/api/auth/github/callback`;
-
+  
 //     const response = await fetch('https://github.com/login/oauth/access_token', {
 //       method: 'POST',
 //       headers: {
@@ -174,19 +171,19 @@ const exchangeCodeForToken = async (req: Request, res: Response) => {
 //         redirect_uri: redirectUri,
 //       }),
 //     });
-
+  
 //     const data = await response.json();
 //     if (!response.ok || data.error) {
 //       throw new Error(data.error_description || 'Failed to exchange code for token.');
 //     }
-
+  
 //     // Additional safety check for the response Content-Type
 //     if (!response.headers.get('content-type')?.includes('application/json')) {
 //       throw new TypeError("Oops, we haven't got JSON!");
 //     }
 
-
-
+    
+  
 //     return data.access_token;
 //   }
 
