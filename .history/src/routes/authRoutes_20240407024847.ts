@@ -100,9 +100,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 // exchange token with the code from the client
 async function exchangeCodeForToken(req: Request, res: Response) {
     console.log('Starting exchangeCodeForToken');
-    //req body code from handleGitHubCallback function
-    const getcode = handleGitHubCallback(req, res);
-    const code = getcode;
+    //req body code from handleGitHubCallback 
     // const { code } = req.body;
     console.log('Code:', code);
 
