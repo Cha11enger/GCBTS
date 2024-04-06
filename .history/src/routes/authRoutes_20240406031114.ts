@@ -97,61 +97,6 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Ending handleGitHubCallback');
 };
 
-// exchange token with the code from the client
-async function exchangeCodeForToken(req: Request, res: Response) {
-    console.log('Starting exchangeCodeForToken');
-    const { code } = req.body;
-    console.log('Code:', code);
+// exchange token post
 
-    if (!code) {
-        console.error('Authorization code is required');
-        return res.status(400).send('Authorization code is required');
-    }
-
-    try {
-        // Exchange the authorization code for an access token
-        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
-            code,
-            redirect_uri: GITHUB_CALLBACK_URL,
-        }, {
-            headers: { Accept: 'application/json' },
-        });
-
-        const { access_token, token_type } = tokenResponse.data;
-
-        // Fetch the user's profile information from GitHub
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${access_token}` },
-        });
-
-        const { login, id, avatar_url, html_url } = userResponse.data;
-
-        // Save or update the user's information in the database
-        await User.findOneAndUpdate({ githubId: id }, {
-            username: login,
-            githubId: id,
-            profileUrl: html_url,
-            avatarUrl: avatar_url,
-            accessToken: access_token, // Storing access token is optional and should be handled securely
-        }, { upsert: true, new: true });
-
-        // Respond after successful authentication
-        res.json({
-                        access_token: access_token,
-                        token_type: token_type,
-                        refresh_token: "example_refresh_token", // Simulated for demonstration
-                        expires_in: 3600, // Simulated value (1 hour)
-                    });
-    }
-    catch (error) {
-        console.error('Authentication failed:', error);
-        res.status(500).send('Authentication failed');
-    }
-    console.log('Ending exchangeCodeForToken');
-}
-
-export { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken };
-
-
+export { redirectToGitHubAuth, handleGitHubCallback };

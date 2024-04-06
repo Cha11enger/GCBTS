@@ -119,7 +119,7 @@ async function exchangeCodeForToken(req: Request, res: Response) {
             headers: { Accept: 'application/json' },
         });
 
-        const { access_token, token_type } = tokenResponse.data;
+        const { access_token } = tokenResponse.data;
 
         // Fetch the user's profile information from GitHub
         const userResponse = await axios.get('https://api.github.com/user', {
@@ -155,3 +155,5 @@ async function exchangeCodeForToken(req: Request, res: Response) {
 export { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken };
 
 
+
+export { redirectToGitHubAuth, handleGitHubCallback };

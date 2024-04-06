@@ -119,7 +119,7 @@ async function exchangeCodeForToken(req: Request, res: Response) {
             headers: { Accept: 'application/json' },
         });
 
-        const { access_token, token_type } = tokenResponse.data;
+        const { access_token } = tokenResponse.data;
 
         // Fetch the user's profile information from GitHub
         const userResponse = await axios.get('https://api.github.com/user', {
@@ -137,21 +137,7 @@ async function exchangeCodeForToken(req: Request, res: Response) {
             accessToken: access_token, // Storing access token is optional and should be handled securely
         }, { upsert: true, new: true });
 
-        // Respond after successful authentication
-        res.json({
-                        access_token: access_token,
-                        token_type: token_type,
-                        refresh_token: "example_refresh_token", // Simulated for demonstration
-                        expires_in: 3600, // Simulated value (1 hour)
-                    });
-    }
-    catch (error) {
-        console.error('Authentication failed:', error);
-        res.status(500).send('Authentication failed');
-    }
-    console.log('Ending exchangeCodeForToken');
-}
-
-export { redirectToGitHubAuth, handleGitHubCallback, exchangeCodeForToken };
+        
 
 
+export { redirectToGitHubAuth, handleGitHubCallback };
