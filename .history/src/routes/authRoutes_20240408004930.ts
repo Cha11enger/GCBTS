@@ -100,32 +100,31 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
 
 // src/routes/authRoutes.ts
 
-// src/routes/authRoutes.ts
 const exchangeCodeForToken = async (req: Request, res: Response) => {
-    console.log('Starting exchangeCodeForToken');
-  
+    // Check if the user is stored in session
     if (!req.session.user) {
       return res.status(401).send({ error: 'Unauthorized: No session found.' });
     }
   
     try {
+      // Fetch user from database using the session information
       const user = await User.findById(req.session.user.id);
   
       if (!user) {
         return res.status(404).send({ error: 'User not found.' });
       }
   
+      // Send the access token back in the response
       res.json({ 
         accessToken: user.accessToken,
         tokenType: "bearer",
-        expiresIn: 3600 // Adjust based on your token management
+        expiresIn: 3600 // Example value, adjust based on your token management strategy
       });
     } catch (error) {
       console.error('Failed to retrieve user:', error);
       res.status(500).send({ error: 'Internal server error.' });
     }
   };
-  
   
 
 // Assuming githubId is somehow provided in the request. You'll need to adjust this based on your actual application logic.

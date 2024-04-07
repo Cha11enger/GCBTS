@@ -18,10 +18,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
-  secret: 'your_secret_key', // Use a secure, unique secret key
+  secret: 'your_secret', // Replace 'your_secret' with a real secret key
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }) // Use your MongoDB connection string
 }));
 
 // Then, after configuring express-session, initialize Passport and session support:

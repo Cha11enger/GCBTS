@@ -98,66 +98,7 @@ const handleGitHubCallback = async (req: Request, res: Response) => {
     console.log('Ending handleGitHubCallback');
 };
 
-// src/routes/authRoutes.ts
-
-// src/routes/authRoutes.ts
-const exchangeCodeForToken = async (req: Request, res: Response) => {
-    console.log('Starting exchangeCodeForToken');
-  
-    if (!req.session.user) {
-      return res.status(401).send({ error: 'Unauthorized: No session found.' });
-    }
-  
-    try {
-      const user = await User.findById(req.session.user.id);
-  
-      if (!user) {
-        return res.status(404).send({ error: 'User not found.' });
-      }
-  
-      res.json({ 
-        accessToken: user.accessToken,
-        tokenType: "bearer",
-        expiresIn: 3600 // Adjust based on your token management
-      });
-    } catch (error) {
-      console.error('Failed to retrieve user:', error);
-      res.status(500).send({ error: 'Internal server error.' });
-    }
-  };
-  
-  
-
-// Assuming githubId is somehow provided in the request. You'll need to adjust this based on your actual application logic.
-// async function exchangeCodeForToken(req: Request, res: Response) {
-//     console.log('Starting exchangeCodeForToken');
-//     const githubId = req.body.githubId; // Example, adjust according to how you get this identifier
-
-//     if (!githubId) {
-//         console.error('GitHub ID is required.');
-//         return res.status(400).send('GitHub ID is required for token exchange.');
-//     }
-
-//     try {
-//         const user = await User.findOne({ githubId: githubId });
-//         if (!user) {
-//             console.error('User not found.');
-//             return res.status(404).send('User not found.');
-//         }
-
-//         // Respond with the token information
-//         res.json({
-//             access_token: user.accessToken,
-//             token_type: user.tokenType || 'bearer', // Assuming you've stored this information
-//             expires_in: user.expiresIn || 3600, // Assuming you've stored this information
-//             // Add refresh_token if you're handling token refresh
-//         });
-//     } catch (error) {
-//         console.error('Failed to fetch user access token:', error);
-//         res.status(500).send('Failed to fetch user access token.');
-//     }
-// }
-
+// 
 
 // exchange token with the code from the client
 // async function exchangeCodeForToken(req: Request, res: Response) {
