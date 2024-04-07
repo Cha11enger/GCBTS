@@ -32,11 +32,6 @@ const cors = require('cors');
 app.use(cors({ credentials: true, origin: 'https://chat.openai.com' }));
 app.use(cookieParser());
 app.use(session({
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: 'strict', // or 'lax' based on your requirements
-  },
   secret: 'your_secret_key', // Use a secure, unique secret key
   resave: false,
   saveUninitialized: true,
