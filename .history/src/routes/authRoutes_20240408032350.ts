@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import User from '../models/User';
-import { Session as ExpressSession } from 'express-session';
+import { Session } from 'express-session';
 
 // src/routes/authRoutes.ts
 
@@ -103,7 +103,7 @@ const exchangeCodeForToken  = async (req: Request, res: Response) => {
   const userdata = getSessionUser(req);
   console.log('Session:', userdata);
     
-  if (!userdata) {
+  if (!user) {
     console.log('Unauthorized: No session found.');
     return res.status(401).send('Unauthorized: No session found.');
   }

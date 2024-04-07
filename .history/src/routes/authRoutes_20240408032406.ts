@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import User from '../models/User';
-import { Session as ExpressSession } from 'express-session';
+import { Session } from 'express-session';
 
 // src/routes/authRoutes.ts
 

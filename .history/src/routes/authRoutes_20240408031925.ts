@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import User from '../models/User';
-import { Session as ExpressSession } from 'express-session';
+import { Session } from 'express-session';
 
 // src/routes/authRoutes.ts
 
@@ -100,42 +100,8 @@ const getSessionUser = (req: Request): Session['user'] => {
 const exchangeCodeForToken  = async (req: Request, res: Response) => {
   console.log('Start of exchangeCodeForToken');
   // use getSessionUser to get the user from the session
-  const userdata = getSessionUser(req);
-  console.log('Session:', userdata);
+  const user = getSessionUser(req);
     
-  if (!userdata) {
-    console.log('Unauthorized: No session found.');
-    return res.status(401).send('Unauthorized: No session found.');
-  }
-
-  try {
-    // if (!req.session.user) {
-    //   console.log('Unauthorized: No session found.');
-    //   return res.status(401).send('Unauthorized: No session found.');
-    // }
-
-  // user from getSessionUser
-   const user = userdata;
-
-    // const user = await User.findById(req.session.user._id);
-    console.log('find User:', user);
-    if (!user) {
-      console.log('Unauthorized: No user found.');
-      return res.status(401).send('Unauthorized: No user found.');
-    }
-
-    res.json({
-      accessToken: user.accessToken,
-      tokenType: 'Bearer',
-      expiresIn: 3600,
-    });
-
-    console.log('End of exchangeCodeForToken');
-  } catch (error) {
-    console.log('Failed to exchange code for token');
-    res.status(500).send('Failed to exchange code for token');
-  }
-}
 
 
 // const exchangeCodeForToken = async (req: express.Request, res: express.Response) => {

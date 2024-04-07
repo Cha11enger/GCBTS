@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import User from '../models/User';
-import { Session as ExpressSession } from 'express-session';
+import { Session } from 'express-session';
 
 // src/routes/authRoutes.ts
 
@@ -100,10 +100,10 @@ const getSessionUser = (req: Request): Session['user'] => {
 const exchangeCodeForToken  = async (req: Request, res: Response) => {
   console.log('Start of exchangeCodeForToken');
   // use getSessionUser to get the user from the session
-  const userdata = getSessionUser(req);
-  console.log('Session:', userdata);
+  const user = getSessionUser(req);
+  console.log('Session:', user);
     
-  if (!userdata) {
+  if (!user) {
     console.log('Unauthorized: No session found.');
     return res.status(401).send('Unauthorized: No session found.');
   }
@@ -114,8 +114,7 @@ const exchangeCodeForToken  = async (req: Request, res: Response) => {
     //   return res.status(401).send('Unauthorized: No session found.');
     // }
 
-  // user from getSessionUser
-   const user = userdata;
+  // user 
 
     // const user = await User.findById(req.session.user._id);
     console.log('find User:', user);
