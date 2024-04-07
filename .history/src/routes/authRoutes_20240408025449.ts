@@ -40,7 +40,7 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       client_id: GITHUB_CLIENT_ID,
       client_secret: GITHUB_CLIENT_SECRET,
       code,
-      redirect_uri: GITHUB_CALLBACK_URL,
+      redirect_uri: G,
     }, {
       headers: { Accept: 'application/json' },
     });
