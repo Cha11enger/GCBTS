@@ -29,7 +29,6 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
   const { code, state } = req.query;
   console.log('Code:', code);
   console.log('State:', state);
-
   if (!code) {
     console.log('Authorization code is required');
     return res.status(400).send('Authorization code is required');
@@ -40,19 +39,18 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       client_id: GITHUB_CLIENT_ID,
       client_secret: GITHUB_CLIENT_SECRET,
       code,
-      redirect_uri: GPT_CALLBACK_URL,
+      redirect_uri: GITHUB_CALLBACK_URL,
     }, {
       headers: { Accept: 'application/json' },
     });
 
     const { access_token } = tokenResponse.data;
-    console.log('Access token:', access_token);
     const userResponse = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `token ${access_token}` },
     });
 
     const { login, id, avatar_url, html_url } = userResponse.data;
-    console.log('GitHub user:', login, id, avatar_url, html_url);
+
     // assign User to express-sessions session object
     req.session.user = { githubId: id, _id: id };
     console.log('User assigned to session', req.session.user);
@@ -64,9 +62,6 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       avatarUrl: avatar_url,
       accessToken: access_token,
     }, { upsert: true, new: true });
-
-    console.log('User:', user);
-    console.log('user got saved to db')
 
     res.redirect(`${GPT_CALLBACK_URL}?code=${code}&state=${state}`);
     console.log('End of handleGitHubCallback');
@@ -88,7 +83,6 @@ const exchangeCodeForToken = async (req: express.Request, res: express.Response)
 
   try {
     const user = await User.findById(req.session.user._id);
-    console.log('find User:', user);
     if (!user) {
       console.log('Unauthorized: No user found.');
       return res.status(401).send('Unauthorized: No user found.');

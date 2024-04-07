@@ -88,7 +88,7 @@ const exchangeCodeForToken = async (req: express.Request, res: express.Response)
 
   try {
     const user = await User.findById(req.session.user._id);
-    console.log('find User:', user);
+    console
     if (!user) {
       console.log('Unauthorized: No user found.');
       return res.status(401).send('Unauthorized: No user found.');

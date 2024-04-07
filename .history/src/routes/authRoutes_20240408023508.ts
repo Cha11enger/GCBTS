@@ -65,8 +65,7 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       accessToken: access_token,
     }, { upsert: true, new: true });
 
-    console.log('User:', user);
-    console.log('user got saved to db')
+    co
 
     res.redirect(`${GPT_CALLBACK_URL}?code=${code}&state=${state}`);
     console.log('End of handleGitHubCallback');
@@ -88,7 +87,6 @@ const exchangeCodeForToken = async (req: express.Request, res: express.Response)
 
   try {
     const user = await User.findById(req.session.user._id);
-    console.log('find User:', user);
     if (!user) {
       console.log('Unauthorized: No user found.');
       return res.status(401).send('Unauthorized: No user found.');
