@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es6",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true,
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["src/**/*", "src/index.ts", "./src//types/custom.d.ts", "./src/types", "src/@types/**/*", custom.d.ts]
+}
