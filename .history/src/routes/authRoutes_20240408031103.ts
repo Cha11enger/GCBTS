@@ -64,9 +64,6 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       accessToken: access_token,
     }, { upsert: true, new: true });
 
-    req.session.user = { githubId: id, _id: id };
-    console.log('User assigned to session', req.session.user);
-
     req.session.save((err) => {
       if (err) {
         // handle error

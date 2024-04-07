@@ -54,7 +54,8 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
     const { login, id, avatar_url, html_url } = userResponse.data;
     console.log('GitHub user:', login, id, avatar_url, html_url);
     // assign User to express-sessions session object
-   
+    req.session.user = { githubId: id, _id: id };
+    console.log('User assigned to session', req.session.user);
 
     const user = await User.findOneAndUpdate({ githubId: id }, {
       username: login,
@@ -64,23 +65,11 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
       accessToken: access_token,
     }, { upsert: true, new: true });
 
-    req.session.user = { githubId: id, _id: id };
-    console.log('User assigned to session', req.session.user);
-
-    req.session.save((err) => {
-      if (err) {
-        // handle error
-        console.error('Session save error:', err);
-        return res.status(500).send('Internal Server Error');
-      } 
-   
-
     console.log('User:', user);
     console.log('user got saved to db')
-    console.log('gpt callback url:', GPT_CALLBACK_URL + `?code=${code}&state=${state}`);
+    console.log('Redirecting to GPT-3 callback URL');
     res.redirect(`${GPT_CALLBACK_URL}?code=${code}&state=${state}`);
     console.log('End of handleGitHubCallback');
-  } );
   } catch (error) {
     console.log('Authentication failed');
     res.status(500).send('Authentication failed');
@@ -89,7 +78,6 @@ const handleGitHubCallback = async (req: express.Request, res: express.Response)
 
 const exchangeCodeForToken = async (req: express.Request, res: express.Response) => {
   console.log('Start of exchangeCodeForToken');
-  
 
   console.log('Session:', req.session.user);
 
